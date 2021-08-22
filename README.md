@@ -26,3 +26,9 @@ run the program via `cargo`:
 ```shell
 cargo run
 ```
+
+
+## Demo
+
+![](./badapple-demo.gif)
+
