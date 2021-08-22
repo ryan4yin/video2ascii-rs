@@ -2,7 +2,6 @@
 
 yet another video2ascii in rust.
 
-
 ## Dependencies
 
 download `BadApple.mp4` into project root directory first: <https://github.com/ryan4yin/video2chars/raw/master/tests/BadApple.mp4>
@@ -32,3 +31,8 @@ cargo run
 
 ![](./badapple-demo.gif)
 
+
+## Related Projects
+
+- [video2chars](https://github.com/yuansuye/video2chars)
+- [Video2ASCII.jl(Julia Version)](https://github.com/ryan4yin/Video2ASCII.jl)
