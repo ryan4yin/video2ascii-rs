@@ -5,10 +5,10 @@ use std::{thread, time};
 use std::process::{Command, Child};
 
 use opencv::{
-	prelude::*,
+    prelude::*,
     core::Size,
     core::Point,
-	videoio,
+    videoio,
     imgproc,
 };
 
@@ -26,23 +26,23 @@ fn video2imgs(video_path: &str, size: (i32, i32), seconds: f64) -> Result<(Vec<M
     let mut img_vec: Vec<Mat> = Vec::new();
 
     // 从指定文件创建一个 VideoCapture 对象
-	#[cfg(not(ocvrs_opencv_branch_32))]
-	let mut cam = videoio::VideoCapture::from_file(video_path, videoio::CAP_FFMPEG)?;
-	if !cam.is_opened()? {
-		panic!("Unable to open the video file: {}", video_path);
-	}
+    #[cfg(not(ocvrs_opencv_branch_32))]
+    let mut cam = videoio::VideoCapture::from_file(video_path, videoio::CAP_FFMPEG)?;
+    if !cam.is_opened()? {
+        panic!("Unable to open the video file: {}", video_path);
+    }
 
 
     let fps = cam.get(videoio::CAP_PROP_FPS)?;
     let frames_count = (fps * seconds) as i32;
 
     let mut count = 0;
-	loop {
-		let mut frame = Mat::default();
-		cam.read(&mut frame)?;
-		if frame.size()?.width <= 0 {
+    loop {
+        let mut frame = Mat::default();
+        cam.read(&mut frame)?;
+        if frame.size()?.width <= 0 {
             break
-		}
+        }
         count += 1;
 
         // 转换成灰度图，也可不做这一步，转换成彩色字符视频。
@@ -60,10 +60,10 @@ fn video2imgs(video_path: &str, size: (i32, i32), seconds: f64) -> Result<(Vec<M
         if count >= frames_count {
             break
         }
-	}
+    }
     cam.release()?;
 
-	Ok((img_vec, fps))
+    Ok((img_vec, fps))
 }
 
 
