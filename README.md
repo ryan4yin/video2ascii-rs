@@ -15,6 +15,7 @@ sudo zypper in libvpx-devel libopus-devel
 sudo zypper in opencv opencv-devel
 sudo zypper in clang clang-devel
 brew install opencv
+cargo build
 
 # use mpv to play audio
 sudo zypper in mpv
