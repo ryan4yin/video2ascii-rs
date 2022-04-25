@@ -52,5 +52,6 @@ cargo run
 
 ## Related Projects
 
-- [video2chars](https://github.com/yuansuye/video2chars)
-- [Video2ASCII.jl(Julia Version)](https://github.com/ryan4yin/Video2ASCII.jl)
+- [video2chars(Python)](https://github.com/yuansuye/video2chars)
+- [Video2ASCII.jl(Julia)](https://github.com/ryan4yin/Video2ASCII.jl)
+- [Video2ASCII.jl(Go)](https://github.com/ryan4yin/Video2ascii)
