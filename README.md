@@ -1,53 +1,40 @@
 # video2ascii-rs
 
-yet another video2ascii in rust.
+Yet another video2ascii in rust.
 
 ## How to Build
 
-download `BadApple.mp4` into project root directory first: <https://github.com/ryan4yin/video2chars/raw/master/tests/BadApple.mp4>
+This project use [nix](https://nixos.org/download/) package manager to manage system-level dependencies,
+which greatly simplifies the setup of the development environment, so you need to have nix installed first.
 
-then install dependencies:
-
-for `opensuse`:
-
-```shell
-sudo zypper in libvpx-devel libopus-devel
-sudo zypper in opencv opencv-devel
-sudo zypper in clang clang-devel
-cargo build
-
-# use mpv to play audio
-sudo zypper in mpv
-```
-
-for macOS:
+Then run the following command to build the project:
 
 ```shell
-brew install opencv
-# macOS can't find libclang.dylib dynamic library because it resides in a non-standard path
-# specify the path of libclang.dylib manually here
-export DYLD_FALLBACK_LIBRARY_PATH="$(xcode-select --print-path)/usr/lib/"
-cargo build
-
-# use mpv to play audio
-brew install mpv
+nix build
 ```
 
-see [opencv-rust](https://github.com/twistedfall/opencv-rust#getting-opencv)'s docs for dependencies on other system.
+See [opencv-rust](https://github.com/twistedfall/opencv-rust#getting-opencv)'s docs for dependencies on other system.
 
 ## How to Run
 
-run the program via `cargo`:
+Download `BadApple.mp4` into project root directory first: <https://github.com/ryan4yin/video2chars/raw/master/tests/BadApple.mp4>
+
+Then run the program via nix:
 
 ```shell
-cargo run
+nix run
 ```
 
+## Development
+
+```shell
+nix develop
+cargo build
+```
 
 ## Demo
 
 ![](./badapple-demo.gif)
-
 
 ## Related Projects
 
@@ -55,4 +42,3 @@ cargo run
 - [Video2ASCII.jl(Julia)](https://github.com/ryan4yin/Video2ASCII.jl)
 - [Video2ASCII.jl(Go)](https://github.com/ryan4yin/Video2ascii)
 - [video2ascii-c(C)](https://github.com/ryan4yin/video2ascii-c)
-
