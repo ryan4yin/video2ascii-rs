@@ -1,37 +1,32 @@
+use std::convert::TryInto;
 use std::io::Error;
 use std::io::Write;
-use std::convert::TryInto;
+use std::process::{Child, Command};
 use std::{thread, time};
-use std::process::{Command, Child};
 
-use opencv::{
-    prelude::*,
-    core::Size,
-    core::Point,
-    videoio,
-    imgproc,
-};
+use opencv::{core::Point, core::Size, imgproc, prelude::*, videoio};
 
 use crossterm::{
-    cursor,
-    execute, queue, style,
+    cursor, execute, queue, style,
     terminal::{self, ClearType},
 };
 
 // 用于生成字符画的像素，越往后视觉上越明显。。这是我自己按感觉排的，你可以随意调整。
-const PIXELS: &str = r#" .,-'`:!1+*abcdefghijklmnopqrstuvwxyz<>()\/{}[]?234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ%&@#$"#;
+const PIXELS: &str =
+    r#" .,-'`:!1+*abcdefghijklmnopqrstuvwxyz<>()\/{}[]?234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ%&@#$"#;
 
-
-fn video2imgs(video_path: &str, size: (i32, i32), seconds: f64) -> Result<(Vec<Mat>, f64), opencv::Error> {
+fn video2imgs(
+    video_path: &str,
+    size: (i32, i32),
+    seconds: f64,
+) -> Result<(Vec<Mat>, f64), opencv::Error> {
     let mut img_vec: Vec<Mat> = Vec::new();
 
     // 从指定文件创建一个 VideoCapture 对象
-    #[cfg(not(ocvrs_opencv_branch_32))]
     let mut cam = videoio::VideoCapture::from_file(video_path, videoio::CAP_FFMPEG)?;
     if !cam.is_opened()? {
         panic!("Unable to open the video file: {}", video_path);
     }
-
 
     let fps = cam.get(videoio::CAP_PROP_FPS)?;
     let frames_count = (fps * seconds) as i32;
@@ -41,7 +36,7 @@ fn video2imgs(video_path: &str, size: (i32, i32), seconds: f64) -> Result<(Vec<M
         let mut frame = Mat::default();
         cam.read(&mut frame)?;
         if frame.size()?.width <= 0 {
-            break
+            break;
         }
         count += 1;
 
@@ -49,16 +44,22 @@ fn video2imgs(video_path: &str, size: (i32, i32), seconds: f64) -> Result<(Vec<M
         let mut gray_frame = Mat::default();
         imgproc::cvt_color(&frame, &mut gray_frame, imgproc::COLOR_BGR2GRAY, 0)?;
 
-
         // resize 图片，保证图片转换成字符画后，能完整地在命令行中显示。
         let mut resized_frame = Mat::default();
         let size = Size::new(size.0, size.1);
-        imgproc::resize(&gray_frame, &mut resized_frame, size, 0.0, 0.0, imgproc::INTER_AREA)?;
+        imgproc::resize(
+            &gray_frame,
+            &mut resized_frame,
+            size,
+            0.0,
+            0.0,
+            imgproc::INTER_AREA,
+        )?;
 
         img_vec.push(resized_frame);
 
         if count >= frames_count {
-            break
+            break;
         }
     }
     cam.release()?;
@@ -66,8 +67,7 @@ fn video2imgs(video_path: &str, size: (i32, i32), seconds: f64) -> Result<(Vec<M
     Ok((img_vec, fps))
 }
 
-
-fn img2chars(frame: &Mat) -> Result<Vec<String>, opencv::Error>{
+fn img2chars(frame: &Mat) -> Result<Vec<String>, opencv::Error> {
     let mut result: Vec<String> = Vec::new();
 
     let size = frame.size()?;
@@ -88,7 +88,6 @@ fn img2chars(frame: &Mat) -> Result<Vec<String>, opencv::Error>{
 
     return Ok(result);
 }
-
 
 fn play_video(char_imgs: Vec<Vec<String>>, fps: f64) -> std::result::Result<(), Error> {
     let wait_millis = time::Duration::from_secs_f64(1.0 / fps);
@@ -124,11 +123,10 @@ fn play_video(char_imgs: Vec<Vec<String>>, fps: f64) -> std::result::Result<(), 
     terminal::disable_raw_mode()
 }
 
-
-fn play_audio(video_path: &str) -> std::io::Result<Child>{
+fn play_audio(video_path: &str) -> std::io::Result<Child> {
     Command::new("mpv")
-    .args(&["--no-video", &video_path])
-    .spawn()
+        .args(&["--no-video", &video_path])
+        .spawn()
 }
 
 fn main() {

@@ -6,5 +6,5 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-opencv = "0.53"
-crossterm = "0.20"
+opencv = "0.92"
+crossterm = "0.28"
